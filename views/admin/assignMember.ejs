@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assign Member to Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2210%22%20height%3D%227%22%20viewBox%3D%220%200%2010%207%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M0%200l5%207%205-7H0z%22%20fill%3D%22%23000%22/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 0.65rem auto;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+  <main class="w-full max-w-md">
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+
+
+      <h1 class="text-2xl font-bold text-black mb-6 text-center">Assign Member to Manager</h1>
+
+      <form method="POST" action="/admin/assign-member" class="space-y-5">
+
+        <!-- Manager Select -->
+        <div>
+          <label class="block mb-2 text-gray-700 font-medium">Manager</label>
+          <select name="managerId" required 
+                  class="w-full border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-gray-900">
+            <% managers.forEach(m => { %>
+              <option value="<%= m._id %>"><%= m.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <!-- Member Select -->
+        <div>
+          <label class="block mb-2 text-gray-700 font-medium">Member</label>
+          <select name="memberId" required 
+                  class="w-full border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-gray-900">
+            <% members.forEach(mem => { %>
+              <option value="<%= mem._id %>"><%= mem.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <button type="submit" 
+                class="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
+          Assign
+        </button>
+      </form>
+    </div>
+    
+   <div class="p-3">
+       <!-- Back Button -->
+      <a href="/admin/dashboard" 
+         class="inline-block mb-4 text-black border border-gray-400 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+        &larr; Back to Dashboard
+      </a>
+   </div>
+  </main>
+</body>
+</html>

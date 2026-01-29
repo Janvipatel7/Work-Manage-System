@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex">
+
+  <!-- SIDEBAR -->
+  <aside class="w-64 bg-black text-white hidden md:flex flex-col">
+    <div class="p-6 text-2xl font-bold border-b border-gray-700">
+      Admin Panel
+    </div>
+
+    <nav class="flex-1 p-4 space-y-2 text-sm">
+      <a href="/admin/dashboard" class="block px-4 py-2 rounded bg-gray-800">
+        Dashboard
+      </a>
+
+      <a href="/admin/work/create" class="block px-4 py-2 rounded hover:bg-gray-800">
+        Create Work
+      </a>
+
+      <!-- 🔥 NEW -->
+      <a href="/admin/assign-member" class="block px-4 py-2 rounded hover:bg-gray-800">
+        Assign Member
+      </a>
+    </nav>
+
+    <form action="/auth/logout" method="GET" class="p-4 border-t border-gray-700">
+      <button class="w-full bg-white text-black py-2 rounded font-semibold">
+        Logout
+      </button>
+    </form>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 p-6 space-y-6">
+
+    <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- USERS SECTION -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">All Users</h2>
+
+        <ul class="space-y-3 text-sm">
+          <% users.forEach(user=> { %>
+            <li class="flex justify-between items-center border-b pb-2">
+              <span class="font-medium">
+                <%= user.name %>
+                  <span class="text-gray-500">(<%= user.role %>)</span>
+              </span>
+
+              <% if (user.role !=="admin" ) { %>
+                <form action="/admin/user/delete/<%= user._id %>" method="POST">
+                  <button class="bg-black text-white px-3 py-1 rounded text-xs">
+                    Delete
+                  </button>
+                </form>
+                <% } %>
+            </li>
+            <% }) %>
+        </ul>
+      </div>
+
+      <!-- WORKS SECTION -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">All Works</h2>
+
+        <ul class="space-y-4 text-sm">
+          <% works.forEach(work=> { %>
+            <li class="border-b pb-3 space-y-2">
+
+              <div class="flex justify-between items-center">
+                <div>
+                  <strong>
+                    <%= work.title %>
+                  </strong>
+                  <span class="text-gray-500">(<%= work.status %>)</span>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="flex gap-2 flex-wrap">
+
+                  <!-- VIEW -->
+                  <a href="/admin/work/view/<%= work._id %>" class="px-3 py-1 text-xs border rounded hover:bg-gray-100">
+                    View
+                  </a>
+
+                  <!-- EDIT (only if you add edit route later) -->
+                  <a href="/admin/work/edit/<%= work._id %>" class="px-3 py-1 text-xs border rounded hover:bg-gray-100">
+                    Edit
+                  </a>
+
+                  <!-- ASSIGN (ONLY IF NOT ASSIGNED) -->
+                  <% if (!work.assignedToManager) { %>
+                    <a href="/admin/work/assign/<%= work._id %>" class="px-3 py-1 text-xs bg-black text-white rounded">
+                      Assign
+                    </a>
+                    <% } %>
+
+                      <!-- DELETE -->
+                      <form action="/admin/work/delete/<%= work._id %>" method="POST">
+                        <button class="px-3 py-1 text-xs bg-red-600 text-white rounded">
+                          Delete
+                        </button>
+                      </form>
+
+                </div>
+              </div>
+
+              <!-- ASSIGNED INFO -->
+              <% if (work.assignedToManager) { %>
+                <p class="text-xs text-gray-600">
+                  Assigned to:
+                  <strong>
+                    <%= work.assignedToManager.name %>
+                  </strong>
+                </p>
+                <% } %>
+
+            </li>
+            <% }) %>
+        </ul>
+      </div>
+
+      <!-- ASSIGNED MEMBERS SECTION -->
+      <div class="bg-white rounded-lg shadow p-6 mt-6">
+        <h2 class="text-xl font-semibold mb-4">Assigned Members</h2>
+
+        <% if (!assignedMembers || assignedMembers.length===0) { %>
+          <p class="text-sm text-gray-500">No members assigned yet</p>
+          <% } %>
+
+            <ul class="space-y-3 text-sm">
+              <% assignedMembers.forEach(member=> { %>
+                <li class="border-b pb-2 flex justify-between items-center">
+                  <div>
+                    <strong>
+                      <%= member.name %>
+                    </strong>
+                    <span class="text-gray-500">(member)</span>
+                    <br />
+                    <span class="text-xs text-gray-600">
+                      Assigned to Manager:
+                      <strong>
+                        <%= member.teamId.name %>
+                      </strong>
+                    </span>
+                  </div>
+
+                  <div class="flex gap-2 flex-wrap">
+                    <!-- EDIT -->
+                    <a href="/admin/assigned-member/edit/<%= member._id %>"
+                      class="px-3 py-1 text-xs border rounded hover:bg-gray-100">
+                      Edit
+                    </a>
+
+                    <!-- DELETE -->
+                    <form action="/admin/assigned-member/delete/<%= member._id %>" method="POST">
+                      <button class="px-3 py-1 text-xs bg-red-600 text-white rounded">
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </li>
+                <% }) %>
+            </ul>
+      </div>
+
+
+    </div>
+  </main>
+</body>
+
+</html>

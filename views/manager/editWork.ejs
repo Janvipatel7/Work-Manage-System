@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Work</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg flex flex-col fixed h-full">
+    <div class="p-6 text-2xl font-bold border-b">Manager Panel</div>
+    <nav class="flex-1 p-6 space-y-2 mt-4">
+      <a href="/manager/dashboard" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a>
+      <a href="/manager/work" class="block px-4 py-2 rounded hover:bg-gray-200">My Works</a>
+      <a href="/manager/work/create" class="block px-4 py-2 rounded hover:bg-gray-200">Create Work</a>
+      <form action="/auth/logout" method="GET" class="mt-6">
+        <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Logout</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 ml-64 p-6 overflow-y-auto">
+    <h1 class="text-3xl font-semibold mb-6">Edit Work: <span class="text-gray-700"><%= work.title %></span></h1>
+
+    <form action="/manager/work/edit/<%= work._id %>" method="POST" class="bg-white p-6 rounded shadow-md max-w-md">
+      <label for="title" class="block text-gray-700 font-medium mb-2">Title</label>
+      <input type="text" id="title" name="title" value="<%= work.title %>" required class="w-full p-2 border border-gray-300 rounded mb-4">
+
+      <label for="description" class="block text-gray-700 font-medium mb-2">Description</label>
+      <textarea id="description" name="description" required class="w-full p-2 border border-gray-300 rounded mb-4"><%= work.description %></textarea>
+
+      <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Update Work</button>
+    </form>
+  </main>
+
+</div>
+</body>
+</html>

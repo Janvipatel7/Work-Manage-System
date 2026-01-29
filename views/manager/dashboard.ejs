@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg flex flex-col fixed h-full">
+    <div class="p-6 text-2xl font-bold border-b">Manager Panel</div>
+    <nav class="flex-1 p-6 space-y-2 mt-4">
+      <a href="/manager/dashboard" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a>
+      <a href="/manager/work" class="block px-4 py-2 rounded hover:bg-gray-200">My Works</a>
+      <a href="/manager/work/create" class="block px-4 py-2 rounded hover:bg-gray-200">Create Work</a>
+      <a href="/manager/completed" class="block px-4 py-2 rounded hover:bg-gray-200">Completed Tasks</a>
+      <form action="/auth/logout" method="GET" class="mt-6">
+        <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Logout</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 ml-64 p-6 overflow-y-auto">
+    <h1 class="text-3xl font-semibold mb-6">Dashboard</h1>
+
+    <!-- Team Members -->
+    <section class="mb-6">
+      <h2 class="text-xl font-semibold mb-3">Team Members</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% if(teamMembers.length > 0) { %>
+          <% teamMembers.forEach(member => { %>
+            <div class="bg-white p-4 rounded shadow hover:shadow-md transition">
+              <p class="font-medium"><%= member.name %></p>
+              <p class="text-sm text-gray-500"><%= member.email %></p>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-gray-500">No team members assigned yet.</p>
+        <% } %>
+      </div>
+    </section>
+
+    <!-- Works Created -->
+    <section>
+      <h2 class="text-xl font-semibold mb-3">Works Created</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% if(works.length > 0) { %>
+          <% works.forEach(work => { %>
+            <div class="bg-white p-4 rounded shadow hover:shadow-md transition flex flex-col justify-between">
+              <div>
+                <p class="font-medium text-lg"><%= work.title %></p>
+                <p class="text-sm text-gray-500 mt-1">Status: <span class="capitalize"><%= work.status %></span></p>
+                <% if(work.assignedToMember) { %>
+                  <p class="text-sm mt-1">Assigned to: <%= work.assignedToMember.name %></p>
+                <% } else { %>
+                  <p class="text-sm mt-1 text-gray-400">Not assigned</p>
+                <% } %>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <% if(!work.assignedToMember) { %>
+                  <a href="/manager/work/assign/<%= work._id %>" class="px-3 py-1 bg-black text-white rounded hover:bg-gray-800">Assign</a>
+                <% } %>
+                <a href="/manager/work/edit/<%= work._id %>" class="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-800">Edit</a>
+                <form action="/manager/work/delete/<%= work._id %>" method="POST" onsubmit="return confirm('Are you sure?');">
+                  <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-gray-500">No works created yet.</p>
+        <% } %>
+      </div>
+    </section>
+  </main>
+
+</div>
+</body>
+</html>

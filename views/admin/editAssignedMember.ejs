@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Assigned Member</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+  <main class="w-full max-w-md">
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+
+      <a href="/admin/dashboard" 
+         class="inline-block mb-4 text-black border border-gray-400 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+        &larr; Back to Dashboard
+      </a>
+
+      <h1 class="text-2xl font-bold text-black mb-6 text-center">Edit Assigned Member</h1>
+
+      <form method="POST" class="space-y-5">
+        <div>
+          <label class="block mb-2 text-gray-700 font-medium">Member Name</label>
+          <input type="text" value="<%= member.name %>" disabled
+                 class="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-gray-700 font-medium">Assign to Manager</label>
+          <select name="managerId" required 
+                  class="w-full border border-gray-300 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-gray-900">
+            <% managers.forEach(manager => { %>
+              <option value="<%= manager._id %>" <%= manager._id.equals(member.teamId) ? "selected" : "" %> >
+                <%= manager.name %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <button type="submit" 
+                class="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
+          Update
+        </button>
+      </form>
+
+    </div>
+  </main>
+</body>
+</html>

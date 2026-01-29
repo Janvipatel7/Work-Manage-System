@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Member Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-md p-5">
+    <h2 class="text-2xl font-bold mb-8">Member Panel</h2>
+
+    <nav class="space-y-4">
+      <a href="/member/dashboard" class="block p-3 rounded hover:bg-black hover:text-white transition">
+        Dashboard
+      </a>
+
+
+      <a href="/auth/logout"
+        class="block p-3 rounded bg-red-500 text-white text-center hover:bg-red-600 transition">
+        Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 p-8">
+
+    <h1 class="text-3xl font-bold mb-6">My Works</h1>
+
+    <% if (works.length === 0) { %>
+      <div class="bg-white p-6 rounded shadow text-center">
+        No work assigned to you.
+      </div>
+    <% } else { %>
+
+    <div class="overflow-x-auto bg-white shadow rounded">
+      <table class="min-w-full">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-6 py-3 text-left">Title</th>
+            <th class="px-6 py-3 text-left">Description</th>
+            <th class="px-6 py-3 text-left">Assigned By</th>
+            <th class="px-6 py-3 text-left">Status</th>
+            <th class="px-6 py-3 text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <% works.forEach(work => { %>
+          <tr class="border-b hover:bg-gray-50">
+            <td class="px-6 py-4 font-medium"><%= work.title %></td>
+            <td class="px-6 py-4"><%= work.description %></td>
+            <td class="px-6 py-4">
+              <%= work.assignedToManager?.name || "N/A" %>
+            </td>
+
+            <td class="px-6 py-4">
+              <span class="px-3 py-1 rounded-full text-sm text-white
+                <%= work.status === 'pending' ? 'bg-orange-500' : 
+                    work.status === 'in-progress' ? 'bg-blue-500' : 
+                    'bg-green-500' %>">
+                <%= work.status %>
+              </span>
+            </td>
+
+            <td class="px-6 py-4">
+              <% if (work.status !== "completed") { %>
+                <form action="/member/complete/<%= work._id %>" method="POST">
+                  <button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded">
+                    Mark Complete
+                  </button>
+                </form>
+              <% } else { %>
+                ✅ Completed
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+
+        </tbody>
+      </table>
+    </div>
+
+    <% } %>
+
+  </main>
+</div>
+
+</body>
+</html>

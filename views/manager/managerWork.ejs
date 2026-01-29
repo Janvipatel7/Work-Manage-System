@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Works</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg flex flex-col fixed h-full">
+    <div class="p-6 text-2xl font-bold border-b">Manager Panel</div>
+    <nav class="flex-1 p-6 space-y-2 mt-4">
+      <a href="/manager/dashboard" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a>
+      <a href="/manager/work" class="block px-4 py-2 rounded hover:bg-gray-200">My Works</a>
+      <a href="/manager/work/create" class="block px-4 py-2 rounded hover:bg-gray-200">Create Work</a>
+      <form action="/auth/logout" method="GET" class="mt-6">
+        <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Logout</button>
+      </form>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 ml-64 p-6 overflow-y-auto">
+    <h1 class="text-3xl font-semibold mb-6">My Works</h1>
+
+    <% if(works.length > 0) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% works.forEach(work => { %>
+          <div class="bg-white p-4 rounded shadow hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <p class="font-medium text-lg"><%= work.title %></p>
+              <p class="text-sm text-gray-500 mt-1">Status: <span class="capitalize"><%= work.status %></span></p>
+              <p class="text-sm mt-1">Created By: <%= work.createdBy ? work.createdBy.name : 'Unknown' %></p>
+            </div>
+
+            <form action="/manager/work/status/<%= work._id %>" method="POST" class="mt-4 flex gap-2">
+              <select name="status" required class="p-1 border border-gray-300 rounded">
+                <option value="pending" <%= work.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="assigned" <%= work.status === 'assigned' ? 'selected' : '' %>>Assigned</option>
+                <option value="in-progress" <%= work.status === 'in-progress' ? 'selected' : '' %>>In Progress</option>
+                <option value="completed" <%= work.status === 'completed' ? 'selected' : '' %>>Completed</option>
+              </select>
+              <button type="submit" class="px-3 py-1 bg-black text-white rounded hover:bg-gray-800">Update</button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="text-gray-500">No works assigned to you yet.</p>
+    <% } %>
+
+  </main>
+
+</div>
+</body>
+</html>
